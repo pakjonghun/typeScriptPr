@@ -9,8 +9,12 @@ const resolvers = {
           let tagExists = caption.includes("#");
           let connectOrCreate = [];
           if (tagExists) {
-            const tags = caption.match(/[\s]+#[\w-_]+/gi);
-            const newTags = tags.map((item) => item.trim());
+            // 정규표현식 적용이 생각보다 어려워서 이렇게도 해보았습니다.
+            const tags = caption.split(" ").map((item) => item.toLowerCase());
+            const newTags = tags.filter((item) => item[0] === "#");
+
+            // const tags = caption.match(/[\s]+#[\w-_]+/gi);
+            // const newTags = tags.map((item) => item.trim());
             connectOrCreate = newTags.map((item) => ({
               where: {
                 hashtag: item,
