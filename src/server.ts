@@ -1,14 +1,10 @@
 require("dotenv").config();
 import express from "express";
 import { graphqlUploadExpress } from "graphql-upload";
-
 import client from "./client";
 import { getUser } from "./user/user.utils";
 import { typeDefs, resolvers } from "./schema";
 import { ApolloServer } from "apollo-server-express";
-import { graphqlHTTP } from "express-graphql";
-import schema from "./schema";
-import { buildTypeDefsAndResolvers } from "type-graphql";
 import morgan from "morgan";
 
 const PORT = process.env.PORT;

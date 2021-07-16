@@ -25,6 +25,14 @@ const resolvers: Resolvers = {
       }
       return id === loggedUser.id;
     },
+
+    photos: ({ id }, { cursor }, { client }) =>
+      client.photo.findMany({
+        take: 5,
+        skip: 1,
+        cursor: { id: cursor },
+        where: { userId: id },
+      }),
   },
 };
 
