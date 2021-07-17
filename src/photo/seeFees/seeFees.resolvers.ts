@@ -1,5 +1,5 @@
 import { mergeGraphQLTypes } from "graphql-tools";
-import { protectResolver } from "../user/user.utils";
+import { protectResolver } from "../../user/user.utils";
 
 export default {
   Query: {

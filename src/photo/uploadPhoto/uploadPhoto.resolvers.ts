@@ -1,4 +1,5 @@
 import { createWriteStream } from "fs";
+import { uploadPhoto } from "../../share/share.utility";
 import { protectResolver } from "../../user/user.utils";
 import { getConnectOrCreate } from "../photo.utility";
 
@@ -7,14 +8,10 @@ const resolvers = {
     uploadPhoto: protectResolver(
       async (_, { caption, photo }, { client, loggedUser }) => {
         try {
-          const { createReadStream, filename } = await photo;
-          const photoName = `${process.cwd()}/uploads/${Date.now()}-${filename}`;
-          const stream = createReadStream();
-          const writeStream = createWriteStream(photoName);
-          stream.pipe(writeStream);
+          const { Location } = await uploadPhoto(photo, loggedUser.id);
           const newPhoto = await client.photo.create({
             data: {
-              file: photoName,
+              file: Location,
               ...(caption && { caption }),
               User: { connect: { id: loggedUser.id } },
               hashtags: {

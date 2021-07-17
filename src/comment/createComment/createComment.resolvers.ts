@@ -5,6 +5,17 @@ export default {
     creatComment: protectResolver(
       async (_, { photoId, description }, { client, loggedUser }) => {
         try {
+          const photoExist = await client.photo.count({
+            where: { id: photoId },
+          });
+
+          if (!photoExist) {
+            return {
+              ok: false,
+              error: "포토가 존재하지 않습니다.",
+            };
+          }
+
           const comment = await client.comment.create({
             data: {
               description,
