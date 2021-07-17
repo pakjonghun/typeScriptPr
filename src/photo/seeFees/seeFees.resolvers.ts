@@ -36,7 +36,6 @@ export default {
           },
         });
 
-        console.log(photos.length);
         return {
           ok: true,
           totalPages: Math.ceil(pages / 5),

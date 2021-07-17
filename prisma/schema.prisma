@@ -43,6 +43,7 @@ model Photo {
   hashtags Hashtag[]
   likes    Like[]
 
+
   Comment Comment[]
 }
 
