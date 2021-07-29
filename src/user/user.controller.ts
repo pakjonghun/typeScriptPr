@@ -13,14 +13,6 @@ export class UserController {
 
   @Post('/join')
   async join(@Body() data: JoinUserDto): Promise<CommonOutput> {
-    if (
-      !(
-        ('email' in data && 'password' in data && 'nickName' in data) ||
-        'socialId' in data
-      )
-    ) {
-      return commonInputOutput;
-    }
     return this.userService.joinUser(data);
   }
 
