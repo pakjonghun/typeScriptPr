@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
@@ -14,6 +19,12 @@ import { TripModule } from './trip/trip.module';
 import { Location } from './trip/entities/location.entity';
 import { Course } from './trip/entities/course.entity';
 import { AreaCode } from './trip/entities/areacode.entity';
+import { userExistConfirmMiddleWare } from './auth/middleWare/userExist.confirm.middlewar';
+import { joinDataConfirmMiddleWare } from './auth/middleWare/joinDataConfirm.middleWare';
+import { LoginDataConfirmMiddleWare } from './auth/middleWare/loginDataConfirm.middleWare';
+import { TokenMiddleWare } from './auth/middleWare/token.middleWare';
+import { UpdateUserDataConfirmMiddleWare } from './auth/middleWare/updateUser.middleWare';
+import { UpdateUserExistConfirmMiddleWare } from './auth/middleWare/updateUserExistConfirm.middleWare';
 
 @Module({
   imports: [
@@ -26,6 +37,9 @@ import { AreaCode } from './trip/entities/areacode.entity';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
+        TOKEN_SECRET: Joi.string().required(),
+        MY_EMAIL: Joi.string().required(),
+        MAIL_KEY: Joi.string().required(),
       }),
     }),
 
@@ -54,4 +68,22 @@ import { AreaCode } from './trip/entities/areacode.entity';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(joinDataConfirmMiddleWare, userExistConfirmMiddleWare)
+      .forRoutes({ path: 'user/join', method: RequestMethod.POST });
+
+    consumer
+      .apply(LoginDataConfirmMiddleWare)
+      .forRoutes({ path: 'user/login', method: RequestMethod.POST });
+
+    consumer
+      .apply(TokenMiddleWare)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+
+    consumer
+      .apply(UpdateUserDataConfirmMiddleWare, UpdateUserExistConfirmMiddleWare)
+      .forRoutes({ path: 'user/update', method: RequestMethod.ALL });
+  }
+}
