@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { UserModule } from './user/user.module';
-import { TripModule } from './trip/trip.module';
 import { TripSupportModule } from './trip-support/trip-support.module';
 import * as Joi from 'joi';
 import { User } from './user/entities/user.entity';
@@ -11,6 +10,10 @@ import { TripRecord } from './user/entities/tripRecord.entity';
 import { Comment } from './trip-support/entities/comment.entity';
 import { AuthModule } from './auth/auth.module';
 import { Auth } from './auth/entities/auth.entity';
+import { TripModule } from './trip/trip.module';
+import { Location } from './trip/entities/location.entity';
+import { Course } from './trip/entities/course.entity';
+import { AreaCode } from './trip/entities/areacode.entity';
 
 @Module({
   imports: [
@@ -33,7 +36,7 @@ import { Auth } from './auth/entities/auth.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [User, TripRecord, Comment, Auth],
+      entities: [User, TripRecord, Comment, Auth, Location, Course, AreaCode],
       synchronize: true,
       logging: true,
     }),
@@ -42,11 +45,11 @@ import { Auth } from './auth/entities/auth.entity';
 
     UserModule,
 
+    AuthModule,
+
     TripModule,
 
     TripSupportModule,
-
-    AuthModule,
   ],
   controllers: [],
   providers: [],
