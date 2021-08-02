@@ -9,4 +9,6 @@ export class JoinDTO extends OmitType(User, [
   'varified',
 ]) {}
 
-export class JoinOutput extends CommonOutput {}
+export class JoinOutput extends CommonOutput {
+  message?: string;
+}
