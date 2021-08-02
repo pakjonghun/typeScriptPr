@@ -32,11 +32,8 @@
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/uuid": "^8.3.1",
-<<<<<<< HEAD
     "axios": "^0.21.1",
-=======
     "bcrypt": "^5.0.1",
->>>>>>> 408184bb81d9e0e94a4bcdcd4ff47c7098e560e1
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "joi": "^17.4.2",
