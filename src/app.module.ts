@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
@@ -11,6 +16,7 @@ import { TripRecord } from './user/entities/tripRecord.entity';
 import { Comment } from './trip-support/entities/comment.entity';
 import { AuthModule } from './auth/auth.module';
 import { Auth } from './auth/entities/auth.entity';
+import { userExistConfirmMiddleWare } from './auth/middleWare/userExist.confirm.middlewar';
 
 @Module({
   imports: [
@@ -51,4 +57,10 @@ import { Auth } from './auth/entities/auth.entity';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(userExistConfirmMiddleWare)
+      .forRoutes({ path: 'user/join', method: RequestMethod.POST });
+  }
+}

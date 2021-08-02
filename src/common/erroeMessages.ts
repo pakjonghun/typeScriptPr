@@ -9,7 +9,7 @@ export const commonMessages = {
   }),
   commonExist: (value) => ({
     ok: false,
-    error: `${value}가 이미 존재합니다.`,
+    error: `${value}이미 존재합니다.`,
   }),
   commonUnAuth: (value) => ({
     ok: false,
