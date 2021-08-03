@@ -11,6 +11,7 @@ import { LoginDTO } from './dtos/login.dto';
 import { UpdateUserDTO, UpdateUserProtoType } from './dtos/updateUser.dto';
 import { User } from './entities/user.entity';
 import * as uuid from 'uuid';
+import { RefreshTokenDTO } from './dtos/refreshToken.dto';
 
 @Injectable()
 export class UserService {
@@ -44,9 +45,8 @@ export class UserService {
     try {
       const userExist = await this.user.findOne(
         { email },
-        { select: ['pwd', 'nickName'] },
+        { select: ['pwd', 'nickName', 'id'] },
       );
-
       if (!userExist) {
         return commonMessages.commonLoginFail;
       }
@@ -58,10 +58,26 @@ export class UserService {
         }
 
         if (passwordCorrect) {
-          const token = this.authService.sign(userExist.nickName);
+          const activeToken = this.authService.sign(
+            'nickName',
+            userExist.nickName,
+            1,
+          );
+          const refreshToken = this.authService.sign(
+            'id',
+            userExist.id,
+            60 * 60,
+          );
+
+          await this.user.save({
+            id: userExist.id,
+            refreshToken: String(refreshToken),
+          });
+
           return {
             ok: true,
-            token,
+            activeToken,
+            refreshToken,
           };
         }
       }
@@ -143,6 +159,19 @@ export class UserService {
     }
   }
 
+  async refrechToken(user: User, data: RefreshTokenDTO) {
+    try {
+      const activeToken = this.authService.sign('nickName', user.nickName, 1);
+      return {
+        ok: true,
+        activeToken,
+      };
+    } catch (e) {
+      console.log(e);
+      return commonMessages.commonFail('인증이');
+    }
+  }
+
   async findBySocialId(socialId: string): Promise<User> {
     return this.user.findOne({ socialId });
   }
@@ -176,6 +205,10 @@ export class UserService {
     return this.user.findOne({ phoneNumber });
   }
 
+  async findByToken(token: string): Promise<User> {
+    return this.user.findOne({ refreshToken: token });
+  }
+
   async findByCondition(condition: object): Promise<User> {
     return this.user.findOne(condition, {
       select: ['pwd', 'email', 'id'],
@@ -184,5 +217,13 @@ export class UserService {
 
   async exceptMeFound(id: number, cretical?: object): Promise<User> {
     return this.user.findOne({ where: { id: Not(id) }, ...cretical });
+  }
+
+  async deleteToken(id) {
+    return this.user.save({ id, refreshToken: null });
+  }
+
+  async updateProptoType(user: User): Promise<void> {
+    await this.user.save(user);
   }
 }

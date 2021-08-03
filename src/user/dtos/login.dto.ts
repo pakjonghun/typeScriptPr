@@ -5,5 +5,6 @@ import { User } from '../entities/user.entity';
 export class LoginDTO extends PickType(User, ['email', 'pwd', 'socialId']) {}
 
 export class LoginOutput extends CommonOutput {
-  token?: string;
+  accessToken?: string;
+  refreshToken?: string;
 }

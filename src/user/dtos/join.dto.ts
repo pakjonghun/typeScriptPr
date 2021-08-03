@@ -7,6 +7,7 @@ export class JoinDTO extends OmitType(User, [
   'id',
   'updatedAt',
   'varified',
+  'refreshToken',
 ]) {}
 
 export class JoinOutput extends CommonOutput {

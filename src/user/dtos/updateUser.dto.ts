@@ -17,6 +17,8 @@ export class UpdateUserDTO extends PartialType(
     'varified',
     'socialId',
     'nickName',
+    ,
+    'refreshToken',
   ]),
 ) {
   @IsOptional()

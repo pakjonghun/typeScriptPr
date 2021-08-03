@@ -31,6 +31,11 @@ export class User extends CoreEntity {
   @IsOptional()
   pwd?: string;
 
+  @Column({ nullable: true, unique: true })
+  @IsString()
+  @IsOptional()
+  refreshToken?: string;
+
   @Column({ default: false })
   varified: boolean;
 

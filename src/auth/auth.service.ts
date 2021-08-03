@@ -9,7 +9,6 @@ import * as sendGridMail from '@sendgrid/mail';
 import { UserService } from 'src/user/user.service';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Response } from 'express';
-import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -20,21 +19,26 @@ export class AuthService {
     @InjectRepository(Auth) private readonly auth: Repository<Auth>,
   ) {}
 
-  sign(nickName: string): string | CommonOutput {
+  sign(key: string, value: string | number, exp?: number) {
     try {
-      return jwt.sign({ nickName }, this.configService.get('TOKEN_SECRET'));
+      return jwt.sign(
+        { [key]: value },
+        this.configService.get('TOKEN_SECRET'),
+        {
+          expiresIn: exp,
+        },
+      );
     } catch (e) {
       console.log(e);
       return commonMessages.commonFail('인증이');
     }
   }
 
-  verify(token: string): CommonOutput | string | jwt.JwtPayload {
+  verify(token: string) {
     try {
       return jwt.verify(token, this.configService.get('TOKEN_SECRET'));
     } catch (e) {
-      console.log(e);
-      return commonMessages.commonFail('인증이');
+      return e.name;
     }
   }
 

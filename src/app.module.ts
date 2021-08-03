@@ -70,7 +70,11 @@ export class AppModule implements NestModule {
 
     consumer.apply(LoginDataConfirmMiddleWare).forRoutes('user/login');
 
-    consumer.apply(TokenMiddleWare).forRoutes('*');
+    consumer
+      .apply(TokenMiddleWare)
+      .exclude({ path: 'user/join', method: RequestMethod.POST })
+      .exclude({ path: 'user/login', method: RequestMethod.POST })
+      .forRoutes('*');
 
     consumer
       .apply(UpdateUserDataConfirmMiddleWare, UpdateUserExistConfirmMiddleWare)

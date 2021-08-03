@@ -14,6 +14,7 @@ import { ConfirmExistDTO, ConfirmExistOutput } from './dtos/confirmExist.dto';
 import { FindPasswordDTO } from './dtos/findPassword.dto';
 import { JoinDTO, JoinOutput } from './dtos/join.dto';
 import { LoginDTO } from './dtos/login.dto';
+import { RefreshTokenDTO } from './dtos/refreshToken.dto';
 import { UpdateUserDTO } from './dtos/updateUser.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
@@ -47,6 +48,12 @@ export class UserController {
   @Put('update')
   updateUser(@getUser() user: User, @Body() data: UpdateUserDTO) {
     return this.userService.updateUser(user, data);
+  }
+
+  @Post('refreshToken')
+  refreshToken(@getUser() user: User, @Body() refreshToken: RefreshTokenDTO) {
+    console.log(1);
+    return this.userService.refrechToken(user, refreshToken);
   }
 
   @Post('confirmexist')
