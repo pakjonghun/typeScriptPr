@@ -11,8 +11,8 @@ export class TripController {
     return this.tripService.getCourse(getCourseInput);
   }
 
-  //   @Get('move')
-  //   moveData() {
-  //     return this.tripService.moveData();
-  //   }
+  @Get('move')
+  moveData() {
+    return this.tripService.moveData();
+  }
 }

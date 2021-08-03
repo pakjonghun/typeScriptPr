@@ -66,7 +66,7 @@ export class Course {
   @IsOptional()
   length?: string;
 
-  @Column({ type: 'bigint', nullable: true })
+  @Column({ nullable: true })
   @IsOptional()
-  taketime?: number;
+  taketime?: string;
 }

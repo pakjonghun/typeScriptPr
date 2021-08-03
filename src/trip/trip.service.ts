@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { GetCourseInput, GetCourseOutput } from './dtos/get-course.dto';
 import { AreaCode } from './entities/areacode.entity';
 import { Course } from './entities/course.entity';
+import { Location } from './entities/location.entity';
 
 @Injectable()
 export class TripService {
@@ -12,6 +13,8 @@ export class TripService {
     @InjectRepository(Course) private readonly courses: Repository<Course>,
     @InjectRepository(AreaCode)
     private readonly areaCodes: Repository<AreaCode>,
+    @InjectRepository(Location)
+    private readonly locations: Repository<Location>,
   ) {}
 
   async getCourse(getCourseInput: GetCourseInput): Promise<GetCourseOutput> {
@@ -39,7 +42,7 @@ export class TripService {
       const results = await this.courses.find({
         areacode: i,
         contenttypeid,
-        cat2: category[1],
+        cat2: category ? category[1] : ' ',
       });
       allData.push(...results);
     }
@@ -95,32 +98,47 @@ export class TripService {
     return d;
   }
 
-  // async moveData() {
-  //   await axios.get('http://localhost:4000/detail/move').then(async (res) => {
-  //     const data = res.data;
+  async moveData() {
+    await axios.get('http://localhost:4000/detail/move').then(async (res) => {
+      const data = res.data;
 
-  //     for (const obj of data) {
-  //       const newObj = this.courses.create({
-  //         contentid: obj.contentid,
-  //         contenttypeid: obj.contenttypeid,
-  //         areacode: obj.areacode,
-  //         title: obj.title,
-  //         overview: obj.overview,
-  //         cat1: obj.cat1,
-  //         cat2: obj.cat2,
-  //         cat3: obj.cat3,
-  //         firstimage: obj.firstimage,
-  //         firstimage2: obj.firstimage2,
-  //         mapx: obj.mapx,
-  //         mapy: obj.mapy,
-  //         mlevel: obj.mlevel,
-  //         sigungucode: obj.sigungucode,
-  //         length: obj.length,
-  //         taketime: obj.taketime,
-  //       });
+      for (const obj of data) {
+        for (const loketsi of obj.course) {
+          console.log(loketsi);
+          const newLoketsi = this.locations.create({
+            contentid: loketsi.contentid,
+            subcontentid: loketsi.subcontentid,
+            contenttypeid: loketsi.contenttypeid,
+            name: loketsi.subname,
+            overview: loketsi.subdetailoverview,
+            img: loketsi.subdetailimg,
+          });
 
-  //       await this.areaCodes.save(newObj);
-  //     }
-  //   });
-  // }
+          await this.locations.save(newLoketsi);
+        }
+
+        const newObj = this.courses.create({
+          contentid: obj.commonDetail[0].contentid,
+          contenttypeid: obj.commonDetail[0].contenttypeid,
+          areacode: obj.commonDetail[0].areacode,
+          title: obj.commonDetail[0].title,
+          overview: obj.commonDetail[0].overview,
+          cat1: obj.commonDetail[0].cat1,
+          cat2: obj.commonDetail[0].cat2,
+          cat3: obj.commonDetail[0].cat3,
+          firstimage: obj.commonDetail[0].firstimage,
+          firstimage2: obj.commonDetail[0].firstimage2,
+          mapx: obj.commonDetail[0].mapx + '',
+          mapy: obj.commonDetail[0].mapy + '',
+          mlevel: obj.commonDetail[0].mlevel,
+          sigungucode: obj.commonDetail[0].sigungucode,
+          length: obj.introduceDetail[0].length,
+          taketime: obj.introduceDetail[0].taketime,
+        });
+
+        console.log(newObj);
+        await this.courses.save(newObj);
+      }
+    });
+  }
 }

@@ -1,5 +1,5 @@
 import { PickType } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/coreEntity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -9,26 +9,32 @@ export class Location extends PickType(CoreEntity, ['id']) {
   id: number;
 
   @Column()
+  @IsOptional()
   @IsNumber()
   contentid: number;
 
   @Column()
+  @IsOptional()
   @IsNumber()
   subcontentid: number;
 
   @Column()
+  @IsOptional()
   @IsNumber()
   contenttypeid: number;
 
   @Column()
+  @IsOptional()
   @IsString()
   name: string;
 
   @Column()
+  @IsOptional()
   @IsString()
   overview: string;
 
-  @Column()
+  @Column({ nullable: true })
+  @IsOptional()
   @IsString()
   img: string;
 }

@@ -1,15 +1,23 @@
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { CommonOutput } from 'src/common/dtos/common.dto';
 import { Course } from '../entities/course.entity';
 
 export class GetCourseInput {
+  @IsOptional() // 테스트용 나중에 지울것
   @IsDate()
   startDate: Date;
 
-  @IsString()
+  @IsOptional() // 테스트용 나중에 지울것
+  @IsArray()
   category: string[];
 
-  @IsNumber()
+  @IsArray()
   areaCode: number;
 
   @IsString()
