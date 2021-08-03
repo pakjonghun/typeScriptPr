@@ -25,6 +25,7 @@ import { LoginDataConfirmMiddleWare } from './auth/middleWare/loginDataConfirm.m
 import { TokenMiddleWare } from './auth/middleWare/token.middleWare';
 import { UpdateUserDataConfirmMiddleWare } from './auth/middleWare/updateUser.middleWare';
 import { UpdateUserExistConfirmMiddleWare } from './auth/middleWare/updateUserExistConfirm.middleWare';
+import { GeoModule } from './geo/geo.module';
 
 @Module({
   imports: [
@@ -64,6 +65,8 @@ import { UpdateUserExistConfirmMiddleWare } from './auth/middleWare/updateUserEx
     TripModule,
 
     TripSupportModule,
+
+    GeoModule,
   ],
   controllers: [],
   providers: [],
@@ -78,9 +81,9 @@ export class AppModule implements NestModule {
       .apply(LoginDataConfirmMiddleWare)
       .forRoutes({ path: 'user/login', method: RequestMethod.POST });
 
-    consumer
-      .apply(TokenMiddleWare)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+    // consumer
+    //   .apply(TokenMiddleWare)
+    //   .forRoutes({ path: '*', method: RequestMethod.ALL });
 
     consumer
       .apply(UpdateUserDataConfirmMiddleWare, UpdateUserExistConfirmMiddleWare)

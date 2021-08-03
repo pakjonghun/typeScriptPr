@@ -62,7 +62,7 @@ export class Course {
   @IsOptional()
   sigungucode?: number;
 
-  @Column({ type: 'bigint', nullable: true })
+  @Column({ nullable: true })
   @IsOptional()
   length?: string;
 

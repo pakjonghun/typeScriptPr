@@ -10,9 +10,4 @@ export class TripController {
   getCourse(@Body() getCourseInput: GetCourseInput): Promise<GetCourseOutput> {
     return this.tripService.getCourse(getCourseInput);
   }
-
-  @Get('move')
-  moveData() {
-    return this.tripService.moveData();
-  }
 }
