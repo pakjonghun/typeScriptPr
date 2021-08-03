@@ -81,9 +81,9 @@ export class AppModule implements NestModule {
       .apply(LoginDataConfirmMiddleWare)
       .forRoutes({ path: 'user/login', method: RequestMethod.POST });
 
-    // consumer
-    //   .apply(TokenMiddleWare)
-    //   .forRoutes({ path: '*', method: RequestMethod.ALL });
+    consumer
+      .apply(TokenMiddleWare)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
 
     consumer
       .apply(UpdateUserDataConfirmMiddleWare, UpdateUserExistConfirmMiddleWare)

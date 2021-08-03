@@ -16,6 +16,6 @@ export class TripController {
   getCourseProcess(
     @Param('contentid') contentid: number,
   ): Promise<GetCourseProcessOutput> {
-    return this.tripService.getCourseProcess(+contentid);
+    return this.tripService.getCourseProcess(contentid);
   }
 }
