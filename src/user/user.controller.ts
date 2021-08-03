@@ -52,7 +52,6 @@ export class UserController {
 
   @Post('refreshToken')
   refreshToken(@getUser() user: User, @Body() refreshToken: RefreshTokenDTO) {
-    console.log(1);
     return this.userService.refrechToken(user, refreshToken);
   }
 

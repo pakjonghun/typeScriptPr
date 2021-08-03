@@ -17,7 +17,6 @@ export class TokenMiddleWare implements NestMiddleware {
         return res.json(commonMessages.commonAuthFail);
       }
 
-      //trip가 있으면 토큰 가진 유저검색하고 없으면 빠꾸 있으면 검증하고 오류뜨면빠꾸 오류안뜨면 다른토큰 또 발급하고 진행
       if (req.body?.key === 'trip') {
         const exist = await this.userService.findByCondition({
           refreshToken: tokenArray[1],

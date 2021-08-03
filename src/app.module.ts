@@ -25,6 +25,7 @@ import { LoginDataConfirmMiddleWare } from './auth/middleWare/loginDataConfirm.m
 import { TokenMiddleWare } from './auth/middleWare/token.middleWare';
 import { UpdateUserDataConfirmMiddleWare } from './auth/middleWare/updateUserDataConfirm.middleWare';
 import { UpdateUserExistConfirmMiddleWare } from './auth/middleWare/updateUserExistConfirm.middleWare';
+import { GeoModule } from './geo/geo.module';
 
 @Module({
   imports: [
@@ -58,6 +59,8 @@ import { UpdateUserExistConfirmMiddleWare } from './auth/middleWare/updateUserEx
     CommonModule,
     TripModule,
     TripSupportModule,
+
+    GeoModule,
   ],
   controllers: [],
   providers: [],
