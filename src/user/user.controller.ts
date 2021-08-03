@@ -1,17 +1,10 @@
-import {
-  Body,
-  Controller,
-  Injectable,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post, Put, UseGuards } from '@nestjs/common';
 import { getUser } from 'src/auth/getUser.decorator';
 import { Guard } from 'src/auth/useGuard';
 import { commonMessages } from 'src/common/erroeMessages';
 import { AuthDTO, AuthOutput } from './dtos/auth.dto';
 import { ConfirmExistDTO, ConfirmExistOutput } from './dtos/confirmExist.dto';
-import { FindPasswordDTO } from './dtos/findPassword.dto';
+import { FindPasswordDTO, FindPasswordOutput } from './dtos/findPassword.dto';
 import { JoinDTO, JoinOutput } from './dtos/join.dto';
 import { LoginDTO } from './dtos/login.dto';
 import { RefreshTokenDTO } from './dtos/refreshToken.dto';
@@ -40,7 +33,7 @@ export class UserController {
   }
 
   @Put('findpassword')
-  findPassword(@Body() data: FindPasswordDTO) {
+  findPassword(@Body() data: FindPasswordDTO): Promise<FindPasswordOutput> {
     return this.userService.findPassword(data);
   }
 
@@ -50,7 +43,8 @@ export class UserController {
     return this.userService.updateUser(user, data);
   }
 
-  @Post('refreshToken')
+  @UseGuards(Guard)
+  @Post('refreshtoken')
   refreshToken(@getUser() user: User, @Body() refreshToken: RefreshTokenDTO) {
     return this.userService.refrechToken(user, refreshToken);
   }
@@ -60,28 +54,6 @@ export class UserController {
     @getUser() user: User,
     @Body() data: ConfirmExistDTO,
   ): Promise<ConfirmExistOutput> {
-    for (let item of Object.keys(data)) {
-      try {
-        let exist;
-
-        if (!user) {
-          exist = await this.userService.findByCondition({
-            [item]: data[item],
-          });
-        } else {
-          exist = await this.userService.exceptMeFound(user.id, {
-            [item]: data[item],
-          });
-        }
-
-        if (exist) {
-          return commonMessages.commonExist(item);
-        }
-      } catch (e) {
-        console.log(e);
-        return commonMessages.commonFail('중복확인이');
-      }
-    }
-    return commonMessages.commonSuccess;
+    return this.userService.confirmExist(user, data);
   }
 }
