@@ -1,6 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { commonMessages } from 'src/common/erroeMessages';
 
 @Injectable()
 export class joinDataConfirmMiddleWare implements NestMiddleware {
@@ -14,11 +13,11 @@ export class joinDataConfirmMiddleWare implements NestMiddleware {
     }
 
     if (!('nickName' in data)) {
-      return res.json({ ok: false, error: '닉네임도 정해주세요.' });
+      return res.json({ ok: false, error: '닉네임을 입력하세요.' });
     }
 
     if ('email' in data) {
-      if (!('password' in data) || !('passwordConfirm' in data)) {
+      if (!('pwd' in data) || !('pwdConfirm' in data)) {
         return res.json({
           ok: false,
           error: '비밀번호나 비밀번호 확인란을 입력하세요',

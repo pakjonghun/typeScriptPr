@@ -19,11 +19,11 @@ import { TripModule } from './trip/trip.module';
 import { Location } from './trip/entities/location.entity';
 import { Course } from './trip/entities/course.entity';
 import { AreaCode } from './trip/entities/areacode.entity';
-import { userExistConfirmMiddleWare } from './auth/middleWare/userExist.confirm.middlewar';
+import { userExistConfirmMiddleWare } from './auth/middleWare/joinExistConfirm.middleWare';
 import { joinDataConfirmMiddleWare } from './auth/middleWare/joinDataConfirm.middleWare';
 import { LoginDataConfirmMiddleWare } from './auth/middleWare/loginDataConfirm.middleWare';
 import { TokenMiddleWare } from './auth/middleWare/token.middleWare';
-import { UpdateUserDataConfirmMiddleWare } from './auth/middleWare/updateUser.middleWare';
+import { UpdateUserDataConfirmMiddleWare } from './auth/middleWare/updateUserDataConfirm.middleWare';
 import { UpdateUserExistConfirmMiddleWare } from './auth/middleWare/updateUserExistConfirm.middleWare';
 
 @Module({
@@ -42,7 +42,6 @@ import { UpdateUserExistConfirmMiddleWare } from './auth/middleWare/updateUserEx
         MAIL_KEY: Joi.string().required(),
       }),
     }),
-
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -54,15 +53,10 @@ import { UpdateUserExistConfirmMiddleWare } from './auth/middleWare/updateUserEx
       synchronize: true,
       logging: true,
     }),
-
-    CommonModule,
-
     UserModule,
-
     AuthModule,
-
+    CommonModule,
     TripModule,
-
     TripSupportModule,
   ],
   controllers: [],
@@ -72,18 +66,14 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(joinDataConfirmMiddleWare, userExistConfirmMiddleWare)
-      .forRoutes({ path: 'user/join', method: RequestMethod.POST });
+      .forRoutes('user/join');
 
-    consumer
-      .apply(LoginDataConfirmMiddleWare)
-      .forRoutes({ path: 'user/login', method: RequestMethod.POST });
+    consumer.apply(LoginDataConfirmMiddleWare).forRoutes('user/login');
 
-    consumer
-      .apply(TokenMiddleWare)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+    consumer.apply(TokenMiddleWare).forRoutes('*');
 
     consumer
       .apply(UpdateUserDataConfirmMiddleWare, UpdateUserExistConfirmMiddleWare)
-      .forRoutes({ path: 'user/update', method: RequestMethod.ALL });
+      .forRoutes('user/update');
   }
 }

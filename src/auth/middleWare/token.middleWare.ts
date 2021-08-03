@@ -1,5 +1,4 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NextFunction, Request, Response } from 'express';
 import { commonMessages } from 'src/common/erroeMessages';
 import { UserService } from 'src/user/user.service';
@@ -24,6 +23,7 @@ export class TokenMiddleWare implements NestMiddleware {
         const user = await this.userService.findByNickName(
           tokenPayload['nickName'],
         );
+
         req['user'] = user;
       }
     }

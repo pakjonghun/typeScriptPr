@@ -7,4 +7,6 @@ export class FindPasswordDTO {
   email: string;
 }
 
-export class FindPasswordOutput extends CommonOutput {}
+export class FindPasswordOutput extends CommonOutput {
+  message?: string;
+}

@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as jwt from 'jsonwebtoken';
@@ -7,10 +6,16 @@ import { commonMessages } from 'src/common/erroeMessages';
 import { Repository } from 'typeorm';
 import { Auth } from './entities/auth.entity';
 import * as sendGridMail from '@sendgrid/mail';
+import { UserService } from 'src/user/user.service';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Response } from 'express';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
     private readonly configService: ConfigService,
     @InjectRepository(Auth) private readonly auth: Repository<Auth>,
   ) {}
@@ -50,5 +55,16 @@ export class AuthService {
     };
     sendGridMail.setApiKey(this.configService.get('MAIL_KEY'));
     await sendGridMail.send(email);
+  }
+
+  async confirmExist(key: string, data: object, res?: Response) {
+    if (key in data) {
+      const exist = await this.userService.findByCondition({
+        [key]: data[key],
+      });
+      if (exist) {
+        return () => res.json(commonMessages.commonExist(key));
+      }
+    }
   }
 }

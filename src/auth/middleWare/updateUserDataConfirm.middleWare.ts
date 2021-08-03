@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { json, NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { commonMessages } from 'src/common/erroeMessages';
 import { UserService } from 'src/user/user.service';
 
@@ -14,21 +14,21 @@ export class UpdateUserDataConfirmMiddleWare implements NestMiddleware {
       count += String(data[i].trim()).length;
     }
     if (!count) {
-      res.json({
+      return res.json({
         ok: false,
         error: commonMessages.commonWrongData,
       });
     }
 
-    if ('password' in data || 'passwordConfirm' in data) {
-      if (!(data['password'] && data['passwordConfirm'])) {
+    if ('pwd' in data || 'pwdConfirm' in data) {
+      if (!(data['pwd'] && data['pwdConfirm'])) {
         return res.json({
           ok: false,
           error: '비밀번호와 비밀번호 확인을 모두 입력하세요.',
         });
       }
 
-      if (data['password'] !== data['passwordConfirm']) {
+      if (data['pwd'] !== data['pwdConfirm']) {
         return res.json({
           ok: false,
           error: '비밀번호가 같지 않습니다.',

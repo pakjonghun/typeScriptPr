@@ -25,21 +25,22 @@ export class User extends CoreEntity {
   email?: string;
 
   @Column({ nullable: true, select: false })
-  @Length(8, 20, { message: '비밀번호는 8~20로 입력하세요' })
+  @Length(8, 40, { message: '비밀번호는 8~40로 입력하세요' })
   @Matches(/^[\S]*$/i, { message: '비밀번호에 공란은 허용되지 않습니다.' })
   @IsString({ message: '올바른 비밀번호 형식이 아닙니다.' })
   @IsOptional()
-  password?: string;
+  pwd?: string;
 
   @Column({ default: false })
   varified: boolean;
 
-  @Length(8, 20, { message: '비밀번호는 8~20로 입력하세요' })
+  @Length(8, 40, { message: '비밀번호는 8~40로 입력하세요' })
   @IsString({ message: '올바른 비밀번호 형식이 아닙니다.' })
   @IsOptional()
   @Matches(/^[\S]*$/i, { message: '비밀번호에 공란은 허용되지 않습니다.' })
-  passwordConfirm?: string;
+  pwdConfirm?: string;
 
+  @Column({ nullable: true })
   @IsString({ message: '올바른 휴대폰번호 형식이 아닙니다.' })
   @IsOptional()
   @Matches(/^[0-9]{3}[-]+[0-9]{4}[-]+[0-9]{4}$/i, {
@@ -57,12 +58,14 @@ export class User extends CoreEntity {
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
-    if (this.password) {
-      this.password = await bcrypt.hash(this.password, 10);
+    console.log(111111111);
+    console.log(this.pwd);
+    if (this.pwd) {
+      this.pwd = await bcrypt.hash(this.pwd, 10);
     }
   }
 
   async checkPassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
+    return bcrypt.compare(password, this.pwd);
   }
 }
