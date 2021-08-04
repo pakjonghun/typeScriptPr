@@ -23,6 +23,25 @@ export class UserService {
     @InjectRepository(Auth) private readonly auth: Repository<Auth>,
   ) {}
 
+  async join(data: JoinDTO): Promise<JoinOutput> {
+    try {
+      const newUser = await this.registerUser(data);
+      if (newUser.email) {
+        const verify = await this.authService.makeVerifyCode(newUser);
+        await this.authService.sendMail(newUser.email, verify.code);
+      }
+      return {
+        ok: true,
+        ...(data.email && {
+          message: '가입한 이메일로 인증번호가 발송되었습니다.',
+        }),
+      };
+    } catch (e) {
+      console.log(e);
+      return commonMessages.commonFail('회원가입이');
+    }
+  }
+
   async login({ email, pwd }: LoginDTO) {
     try {
       const userExist = await this.user.findOne(
