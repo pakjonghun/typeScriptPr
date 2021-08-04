@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { getUser } from 'src/auth/getUser.decorator';
 import { Guard } from 'src/auth/useGuard';
 import { commonMessages } from 'src/common/erroeMessages';
@@ -7,6 +7,7 @@ import { ConfirmExistDTO, ConfirmExistOutput } from './dtos/confirmExist.dto';
 import { FindPasswordDTO, FindPasswordOutput } from './dtos/findPassword.dto';
 import { JoinDTO, JoinOutput } from './dtos/join.dto';
 import { LoginDTO } from './dtos/login.dto';
+import { MeOutput } from './dtos/me.dto';
 import { RefreshTokenDTO } from './dtos/refreshToken.dto';
 import { UpdateUserDTO } from './dtos/updateUser.dto';
 import { User } from './entities/user.entity';
@@ -24,6 +25,12 @@ export class UserController {
   @Post('login')
   login(@Body() data: LoginDTO) {
     return this.userService.login(data);
+  }
+
+  @UseGuards(Guard)
+  @Get('me')
+  me(@getUser() user: User): MeOutput {
+    return { ok: true, data: user };
   }
 
   @UseGuards(Guard)
